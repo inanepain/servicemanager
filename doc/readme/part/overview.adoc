@@ -1,0 +1,42 @@
+= Overview
+
+
+`inanepain/servicemanager` is a small, factory-driven dependency injection container.
+
+At its core, a `ServiceManager` is a registry of *services* identified by a string name. Each service is produced by a *factory* (a `callable`).
+
+The factory signature is intentionally simple:
+
+[source,php]
+====
+function (\Inane\ServiceManager\ServiceManager $sm): mixed
+====
+
+Passing the `ServiceManager` to factories enables dependency resolution inside the factory (e.g. `$sm->get('config')`).
+
+== Lifecycle: `get()` vs `build()`
+
+The `ServiceManager` supports two retrieval modes:
+
+* `get($name)` returns a *cached* instance.
+  ** The first call builds the service via its factory and stores the result.
+  ** Subsequent calls return the same instance.
+* `build($name)` always returns a *new* instance.
+
+This makes it easy to mix singleton-style services (via `get()`) with transient services (via `build()`).
+
+== Errors
+
+If a service name is not registered, `get()` and `build()` throw `Inane\Stdlib\Exception\Exception` with the message `Service '{name}' not found.`.
+
+== API Summary
+
+* `ServiceManager::createServiceManager(OptionsInterface $services): static`
+  ** Convenience factory that registers each entry in an `OptionsInterface` mapping.
+* `register(string $name, callable $factory): void`
+  ** Registers a service factory under the given name.
+* `get(string $name): mixed`
+  ** Returns the cached service instance.
+* `build(string $name): mixed`
+  ** Builds and returns a new service instance.
+

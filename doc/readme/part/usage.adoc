@@ -1,0 +1,112 @@
+= Usage
+
+
+== Quickstart
+
+Register a service with `register()` and fetch it with `get()`:
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+
+$sm = new ServiceManager();
+
+$sm->register('now', static fn () => new DateTimeImmutable('now'));
+
+$a = $sm->get('now');
+$b = $sm->get('now');
+
+// `get()` caches, so `$a` and `$b` are the same instance.
+var_dump($a === $b);
+====
+
+== Transient services with `build()`
+
+Use `build()` when you want a new instance each time:
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+
+$sm = new ServiceManager();
+
+$sm->register('uuid', static fn () => bin2hex(random_bytes(16)));
+
+$a = $sm->build('uuid');
+$b = $sm->build('uuid');
+
+// `build()` always invokes the factory.
+var_dump($a !== $b);
+====
+
+== Factories can resolve dependencies
+
+Factories receive the `ServiceManager` instance, so they can depend on other services:
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+use Psr\Log\NullLogger;
+
+$sm = new ServiceManager();
+
+$sm->register('logger', static fn () => new NullLogger());
+
+$sm->register('worker', static function (ServiceManager $sm) {
+    $logger = $sm->get('logger');
+
+    return new class($logger) {
+        public function __construct(private object $logger) {}
+    };
+});
+
+$worker = $sm->get('worker');
+====
+
+== Bulk registration with `createServiceManager()`
+
+If you already have a mapping of service names to factories, you can create and populate a manager in one step.
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+use Inane\Stdlib\Options;
+
+$services = new Options([
+    'config' => static fn () => new Options(['env' => 'dev']),
+    'answer' => static fn () => 42,
+]);
+
+$sm = ServiceManager::createServiceManager($services);
+
+var_dump($sm->get('answer'));
+====
+
+== Missing services
+
+If you call `get()` or `build()` with an unregistered name, an `Inane\Stdlib\Exception\Exception` is thrown.
+

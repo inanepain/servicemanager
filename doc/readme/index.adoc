@@ -1,0 +1,38 @@
+= inanepain/servicemanager image:./icon.png[title=inanepain/stdlib,25]
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Factory-driven dependency injection container.
+:keywords: inanepain, library, servicemanager
+:copyright: Unlicense
+:homepage: https://github.com/inanepain/servicemanager
+:revnumber: 0.1.0
+:revdate: 2026-xx-xx
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:sectanchors:
+:idprefix: topic-
+:idseparator: -
+:pkg-vendor: inanepain
+:pkg-name: servicemanager
+:pkg-id: {pkg-vendor}/{pkg-name}
+
+== image:./icon.png[title={pkg-id},25] {pkg-id}
+
+{description}
+
+:sectnums:
+
+<<<
+
+include::part/install.adoc[leveloffset=+1]
+
+<<<
+
+include::part/overview.adoc[leveloffset=+1]
+
+<<<
+
+include::part/usage.adoc[leveloffset=+1]

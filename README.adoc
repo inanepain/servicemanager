@@ -1,0 +1,208 @@
+= inanepain/servicemanager image:./icon.png[title=inanepain/stdlib,25]
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Factory-driven dependency injection container.
+:keywords: inanepain, library, servicemanager
+:copyright: Unlicense
+:homepage: https://github.com/inanepain/servicemanager
+:revnumber: 0.1.0
+:revdate: 2026-xx-xx
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:sectanchors:
+:idprefix: topic-
+:idseparator: -
+:pkg-vendor: inanepain
+:pkg-name: servicemanager
+:pkg-id: {pkg-vendor}/{pkg-name}
+
+== image:./icon.png[title={pkg-id},25] {pkg-id}
+
+{description}
+
+:sectnums:
+
+<<<
+
+:leveloffset: +1
+
+= Install
+
+.composer
+[source,shell]
+====
+composer require {pkg-id}
+====
+
+:leveloffset!:
+
+<<<
+
+:leveloffset: +1
+
+= Overview
+
+
+`inanepain/servicemanager` is a small, factory-driven dependency injection container.
+
+At its core, a `ServiceManager` is a registry of *services* identified by a string name. Each service is produced by a *factory* (a `callable`).
+
+The factory signature is intentionally simple:
+
+[source,php]
+====
+function (\Inane\ServiceManager\ServiceManager $sm): mixed
+====
+
+Passing the `ServiceManager` to factories enables dependency resolution inside the factory (e.g. `$sm->get('config')`).
+
+== Lifecycle: `get()` vs `build()`
+
+The `ServiceManager` supports two retrieval modes:
+
+* `get($name)` returns a *cached* instance.
+  ** The first call builds the service via its factory and stores the result.
+  ** Subsequent calls return the same instance.
+* `build($name)` always returns a *new* instance.
+
+This makes it easy to mix singleton-style services (via `get()`) with transient services (via `build()`).
+
+== Errors
+
+If a service name is not registered, `get()` and `build()` throw `Inane\Stdlib\Exception\Exception` with the message `Service '{name}' not found.`.
+
+== API Summary
+
+* `ServiceManager::createServiceManager(OptionsInterface $services): static`
+  ** Convenience factory that registers each entry in an `OptionsInterface` mapping.
+* `register(string $name, callable $factory): void`
+  ** Registers a service factory under the given name.
+* `get(string $name): mixed`
+  ** Returns the cached service instance.
+* `build(string $name): mixed`
+  ** Builds and returns a new service instance.
+
+
+:leveloffset!:
+
+<<<
+
+:leveloffset: +1
+
+= Usage
+
+
+== Quickstart
+
+Register a service with `register()` and fetch it with `get()`:
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+
+$sm = new ServiceManager();
+
+$sm->register('now', static fn () => new DateTimeImmutable('now'));
+
+$a = $sm->get('now');
+$b = $sm->get('now');
+
+// `get()` caches, so `$a` and `$b` are the same instance.
+var_dump($a === $b);
+====
+
+== Transient services with `build()`
+
+Use `build()` when you want a new instance each time:
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+
+$sm = new ServiceManager();
+
+$sm->register('uuid', static fn () => bin2hex(random_bytes(16)));
+
+$a = $sm->build('uuid');
+$b = $sm->build('uuid');
+
+// `build()` always invokes the factory.
+var_dump($a !== $b);
+====
+
+== Factories can resolve dependencies
+
+Factories receive the `ServiceManager` instance, so they can depend on other services:
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+use Psr\Log\NullLogger;
+
+$sm = new ServiceManager();
+
+$sm->register('logger', static fn () => new NullLogger());
+
+$sm->register('worker', static function (ServiceManager $sm) {
+    $logger = $sm->get('logger');
+
+    return new class($logger) {
+        public function __construct(private object $logger) {}
+    };
+});
+
+$worker = $sm->get('worker');
+====
+
+== Bulk registration with `createServiceManager()`
+
+If you already have a mapping of service names to factories, you can create and populate a manager in one step.
+
+[source,php]
+====
+<?php
+
+declare(strict_types=1);
+
+require_once 'vendor/autoload.php';
+
+use Inane\ServiceManager\ServiceManager;
+use Inane\Stdlib\Options;
+
+$services = new Options([
+    'config' => static fn () => new Options(['env' => 'dev']),
+    'answer' => static fn () => 42,
+]);
+
+$sm = ServiceManager::createServiceManager($services);
+
+var_dump($sm->get('answer'));
+====
+
+== Missing services
+
+If you call `get()` or `build()` with an unregistered name, an `Inane\Stdlib\Exception\Exception` is thrown.
+
+
+:leveloffset!:
