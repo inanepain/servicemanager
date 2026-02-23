@@ -27,7 +27,7 @@ This makes it easy to mix singleton-style services (via `get()`) with transient 
 
 == Errors
 
-If a service name is not registered, `get()` and `build()` throw `Inane\Stdlib\Exception\Exception` with the message `Service '{name}' not found.`.
+If a service name is not registered, `get()` and `build()` throw `Inane\ServiceManager\Exception\NotFoundException` (implements `Psr\Container\NotFoundExceptionInterface`) with the message `Service '{name}' not found.`.
 
 == API Summary
 

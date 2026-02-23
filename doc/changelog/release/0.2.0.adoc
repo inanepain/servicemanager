@@ -1,0 +1,5 @@
+= 0.2.0 (2026 Feb 23)
+:revnumber: 0.2.0
+:revdate: 2026-02-23
+
+* added support for https://www.php-fig.org/psr/psr-11/[PSR-11: Container interface].

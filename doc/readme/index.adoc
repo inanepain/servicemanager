@@ -2,10 +2,10 @@
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Factory-driven dependency injection container.
-:keywords: inanepain, library, servicemanager
+:keywords: inanepain, library, servicemanager, container, psr-11
 :copyright: Unlicense
 :homepage: https://github.com/inanepain/servicemanager
-:revnumber: 0.1.0
+:revnumber: 0.2.0
 :revdate: 2026-02-23
 :experimental:
 :hide-uri-scheme:

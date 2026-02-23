@@ -20,7 +20,9 @@
         "inanepain",
         "inane",
         "library",
-        "servicemanager"
+        "servicemanager",
+        "container",
+        "psr-11"
     ],
     "autoload": {
         "psr-4": {
@@ -36,8 +38,9 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.4",
+        "psr/container": "^2.0",
         "inanepain/config": ">=0.4.0",
-        "inanepain/stdlib": ">=0.7.1"
+        "inanepain/stdlib": ">=0.8.0"
     },
     "require-dev": {},
     "scripts": {

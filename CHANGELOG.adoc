@@ -2,8 +2,8 @@
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Factory-driven dependency injection container.
-:keywords: inanepain, library, servicemanager
-:revnumber: 0.1.0
+:keywords: inanepain, library, servicemanager, container, psr-11
+:revnumber: 0.2.0
 :revdate: 2026-02-23
 :copyright: Unlicense
 :experimental:
@@ -16,6 +16,15 @@
 
 == History
 
+:leveloffset: +2
+
+= 0.2.0 (2026 Feb 23)
+:revnumber: 0.2.0
+:revdate: 2026-02-23
+
+* added support for https://www.php-fig.org/psr/psr-11/[PSR-11: Container interface].
+
+:leveloffset!:
 :leveloffset: +2
 
 = 0.1.0 (2026 Feb 23)

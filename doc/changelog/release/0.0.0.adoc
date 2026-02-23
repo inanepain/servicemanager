@@ -1,7 +1,5 @@
-= 0.1.0-dev (2026 Xxx xx)
-:revnumber: 0.1.0-dev
+= 0.3.0-dev (2026 Xxx xx)
+:revnumber: 0.3.0-dev
 :revdate: 2026-XX-XX
 :revremark: -dev
 :version-label: Unconfirmed
-
-* Initial Release.
