@@ -3,8 +3,8 @@
 :email: <philip@cathedral.co.za>
 :description: Factory-driven dependency injection container.
 :keywords: inanepain, library, servicemanager, container, psr-11
-:revnumber: 0.2.0
-:revdate: 2026-02-23
+:revnumber: 0.3.0-dev
+:revdate: 2026-xx-xx
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
@@ -16,5 +16,6 @@
 
 == History
 
+include::./release/0.0.0.adoc[leveloffset=+2]
 include::./release/0.2.0.adoc[leveloffset=+2]
 include::./release/0.1.0.adoc[leveloffset=+2]
