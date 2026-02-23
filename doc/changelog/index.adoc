@@ -4,7 +4,7 @@
 :description: Factory-driven dependency injection container.
 :keywords: inanepain, library, servicemanager
 :revnumber: 0.1.0
-:revdate: 2026-xx-xx
+:revdate: 2026-02-23
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
@@ -16,4 +16,4 @@
 
 == History
 
-include::./release/0.0.0.adoc[leveloffset=+2]
+include::./release/0.1.0.adoc[leveloffset=+2]
