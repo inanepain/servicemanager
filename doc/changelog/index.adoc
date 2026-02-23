@@ -2,7 +2,7 @@
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Factory-driven dependency injection container.
-:keywords: inanepain, library, servicemanager
+:keywords: inanepain, library, servicemanager, container, psr-11
 :revnumber: 0.1.0
 :revdate: 2026-02-23
 :copyright: Unlicense
@@ -16,4 +16,5 @@
 
 == History
 
+include::./release/0.0.0.adoc[leveloffset=+2]
 include::./release/0.1.0.adoc[leveloffset=+2]

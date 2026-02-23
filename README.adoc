@@ -2,7 +2,7 @@
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Factory-driven dependency injection container.
-:keywords: inanepain, library, servicemanager
+:keywords: inanepain, library, servicemanager, container, psr-11
 :copyright: Unlicense
 :homepage: https://github.com/inanepain/servicemanager
 :revnumber: 0.1.0
@@ -72,7 +72,7 @@ This makes it easy to mix singleton-style services (via `get()`) with transient 
 
 == Errors
 
-If a service name is not registered, `get()` and `build()` throw `Inane\Stdlib\Exception\Exception` with the message `Service '{name}' not found.`.
+If a service name is not registered, `get()` and `build()` throw `Inane\ServiceManager\Exception\NotFoundException` (implements `Psr\Container\NotFoundExceptionInterface`) with the message `Service '{name}' not found.`.
 
 == API Summary
 
@@ -111,7 +111,7 @@ use Inane\ServiceManager\ServiceManager;
 
 $sm = new ServiceManager();
 
-$sm->register('now', static fn () => new DateTimeImmutable('now'));
+$sm->register('now', static fn (ServiceManager $sm) => new DateTimeImmutable('now'));
 
 $a = $sm->get('now');
 $b = $sm->get('now');
@@ -136,7 +136,7 @@ use Inane\ServiceManager\ServiceManager;
 
 $sm = new ServiceManager();
 
-$sm->register('uuid', static fn () => bin2hex(random_bytes(16)));
+$sm->register('uuid', static fn (ServiceManager $sm) => bin2hex(random_bytes(16)));
 
 $a = $sm->build('uuid');
 $b = $sm->build('uuid');
@@ -162,7 +162,7 @@ use Psr\Log\NullLogger;
 
 $sm = new ServiceManager();
 
-$sm->register('logger', static fn () => new NullLogger());
+$sm->register('logger', static fn (ServiceManager $sm) => new NullLogger());
 
 $sm->register('worker', static function (ServiceManager $sm) {
     $logger = $sm->get('logger');
@@ -191,8 +191,8 @@ use Inane\ServiceManager\ServiceManager;
 use Inane\Stdlib\Options;
 
 $services = new Options([
-    'config' => static fn () => new Options(['env' => 'dev']),
-    'answer' => static fn () => 42,
+    'config' => static fn (ServiceManager $sm) => new Options(['env' => 'dev']),
+    'answer' => static fn (ServiceManager $sm) => 42,
 ]);
 
 $sm = ServiceManager::createServiceManager($services);
@@ -202,7 +202,7 @@ var_dump($sm->get('answer'));
 
 == Missing services
 
-If you call `get()` or `build()` with an unregistered name, an `Inane\Stdlib\Exception\Exception` is thrown.
+If you call `get()` or `build()` with an unregistered name, an `Inane\ServiceManager\Exception\NotFoundException` (PSR-11 `Psr\Container\NotFoundExceptionInterface`) is thrown.
 
 
 :leveloffset!:
