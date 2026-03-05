@@ -10,30 +10,28 @@
  *
  * PHP version 8.5
  *
- * @author Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\services
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\services
  * @category services
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\ServiceManager;
 
-use Inane\ServiceManager\Exception\NotFoundException;
-use Psr\Container\ContainerInterface;
 use Inane\Config\ConfigAware\{
     ConfigAwareAttribute,
-    ConfigAwareTrait
-};
+    ConfigAwareTrait};
+use Inane\ServiceManager\Exception\NotFoundException;
 use Inane\Stdlib\{
     Array\OptionsInterface,
-    Options
-};
+    Options};
+use Psr\Container\ContainerInterface;
 
 use function call_user_func;
 
@@ -60,20 +58,9 @@ class ServiceManager implements ContainerInterface {
 
     //#region Properties
     /**
-     * @var OptionsInterface Services container
+     * @var OptionsInterface<class-string, array> Services container
      */
     private OptionsInterface $services;
-
-    /**
-     * Retrieves the configuration object.
-     *
-     * This method returns the configuration object associated with the instance.
-     *
-     * @return OptionsInterface The configuration object.
-     */
-    public function getConfig(): OptionsInterface {
-        return $this->config;
-    }
     //#endregion Properties
 
     /**
@@ -95,17 +82,32 @@ class ServiceManager implements ContainerInterface {
         return $sm;
     }
 
+    /**
+     * Retrieves the configuration object.
+     *
+     * This method returns the configuration object associated with the instance.
+     *
+     * @return OptionsInterface The configuration object.
+     */
+    public function getConfig(): OptionsInterface {
+        return $this->config;
+    }
+
     #region Service Management
+
     /**
      * Registers a new service with the specified name and factory.
      *
-     * @param string   $id      The name of the service to register.
-     * @param callable $factory A callable factory responsible for creating the service instance.
+     * @param class-string $id      The name of the service to register.
+     * @param callable     $factory A callable factory responsible for creating the service instance.
      *
      * @return void
      */
     public function register(string $id, callable $factory): void {
-        $this->services->set($id, ['factory' => $factory, 'result' => null]);
+        $this->services->set($id, [
+            'factory' => $factory,
+            'result'  => null,
+        ]);
     }
 
     /**
@@ -113,7 +115,7 @@ class ServiceManager implements ContainerInterface {
      *
      * Determines whether a service with the specified name has been registered.
      *
-     * @param string $id The name of the service to check for existence.
+     * @param class-string $id The name of the service to check for existence.
      *
      * @return bool True if the service exists, false otherwise.
      */
@@ -122,32 +124,15 @@ class ServiceManager implements ContainerInterface {
     }
 
     /**
-     * Builds a service by invoking its factory method.
-     *
-     * This always returns a new instance of the service.
-     *
-     * @param string $id The name of the service to build.
-     *
-     * @return mixed The result of invoking the service's factory method.
-     *
-     * @throws NotFoundException If the specified service is not found.
-     */
-    public function build(string $id): mixed {
-        if (!$this->has($id)) {
-            throw new NotFoundException("Service '{$id}' not found.");
-        }
-
-        return call_user_func($this->services->{$id}->factory, $this); // Pass the service manager for dependency resolution
-    }
-
-    /**
      * Retrieves a service by its name.
      *
      * A service is only built if it has not been cached. This method always returns the same instance of the service.
      *
-     * @param string $id     The name of the service to retrieve.
+     * @template T of object
      *
-     * @return mixed The cached instance of the service.
+     * @param class-string<T> $id The name of the service to retrieve.
+     *
+     * @return T The cached instance of the service.
      *
      * @throws NotFoundException If the specified service is not found.
      */
@@ -160,7 +145,29 @@ class ServiceManager implements ContainerInterface {
 
         $rst = $this->build($id);
         $this->services->{$id}->set('result', $rst);
+
         return $rst;
+    }
+
+    /**
+     * Builds a service by invoking its factory method.
+     *
+     * This always returns a new instance of the service.
+     *
+     * @template T of object
+     *
+     * @param class-string<T> $id The name of the service to build.
+     *
+     * @return T The result of invoking the service's factory method.
+     *
+     * @throws NotFoundException If the specified service is not found.
+     */
+    public function build(string $id): mixed {
+        if (!$this->has($id)) {
+            throw new NotFoundException("Service '{$id}' not found.");
+        }
+
+        return call_user_func($this->services->{$id}->factory, $this); // Pass the service manager for dependency resolution
     }
     #endregion Service Management
 }
