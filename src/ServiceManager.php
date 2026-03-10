@@ -24,14 +24,16 @@ declare(strict_types = 1);
 
 namespace Inane\ServiceManager;
 
+use Inane\ServiceManager\Exception\NotFoundException;
+use Psr\Container\ContainerInterface;
 use Inane\Config\ConfigAware\{
     ConfigAwareAttribute,
-    ConfigAwareTrait};
-use Inane\ServiceManager\Exception\NotFoundException;
+    ConfigAwareTrait
+};
 use Inane\Stdlib\{
     Array\OptionsInterface,
-    Options};
-use Psr\Container\ContainerInterface;
+    Options
+};
 
 use function call_user_func;
 
@@ -42,7 +44,7 @@ use function call_user_func;
  *
  * @version 0.1.0
  */
-#[ConfigAwareAttribute(true)]
+#[ConfigAwareAttribute(false)]
 class ServiceManager implements ContainerInterface {
     /**
      * Trait ConfigAwareTrait
