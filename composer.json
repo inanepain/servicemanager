@@ -29,6 +29,11 @@
             "Inane\\ServiceManager\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Inane\\ServiceManager\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "preferred-install": "dist",
         "optimize-autoloader": true,
