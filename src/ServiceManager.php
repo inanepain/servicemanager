@@ -24,16 +24,14 @@ declare(strict_types = 1);
 
 namespace Inane\ServiceManager;
 
-use Inane\ServiceManager\Exception\NotFoundException;
-use Psr\Container\ContainerInterface;
 use Inane\Config\ConfigAware\{
     ConfigAwareAttribute,
-    ConfigAwareTrait
-};
+    ConfigAwareTrait};
+use Inane\ServiceManager\Exception\NotFoundException;
 use Inane\Stdlib\{
     Array\OptionsInterface,
-    Options
-};
+    Options};
+use Psr\Container\ContainerInterface;
 
 use function call_user_func;
 
@@ -66,7 +64,7 @@ class ServiceManager implements ContainerInterface {
     //#endregion Properties
 
     /**
-     * Creates and initializes a new service manager instance with the given services.
+     * Creates and initialises a new service manager instance with the given services.
      *
      * @param OptionsInterface $services  A collection of services represented as a key-value mapping
      *                                    where each key is the service name and the value is its associated function.
